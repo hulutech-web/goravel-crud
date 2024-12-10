@@ -4,6 +4,7 @@ import (
 	"github.com/goravel/framework/contracts/http"
 	httpfacade "github.com/hulutech-web/http_result"
 	"goravel/packages/goravel-crud/core/controller"
+	"goravel/packages/goravel-crud/core/curd_orm"
 	"goravel/packages/goravel-crud/core/migration"
 	"goravel/packages/goravel-crud/core/model"
 	"goravel/packages/goravel-crud/core/request"
@@ -103,4 +104,18 @@ func (r *CRUDController) All(ctx http.Context) http.Response {
 	}
 
 	return httpfacade.NewResult(ctx).Success("生成成功", nil)
+}
+
+func (r *CRUDController) Tables(ctx http.Context) http.Response {
+	tbs := curd_orm.TableDefine()
+	return httpfacade.NewResult(ctx).Success("", tbs)
+}
+
+func (r *CRUDController) Migrate(ctx http.Context) http.Response {
+	sql := ctx.Request().Input("sql")
+	err := curd_orm.GenSql(sql)
+	if err != nil {
+		return httpfacade.NewResult(ctx).Error(http.StatusInternalServerError, err.Error(), nil)
+	}
+	return httpfacade.NewResult(ctx).Success("建表成功", nil)
 }

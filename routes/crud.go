@@ -36,6 +36,10 @@ func CRUD(app foundation.Application) {
 		r.Post("request_make", ctrl.Request)
 
 		r.Post("entity_all", ctrl.All)
+
+		//	 panel面板
+		r.Get("tables", ctrl.Tables)
+		r.Post("migrate", ctrl.Migrate)
 	})
 
 	// swagger

@@ -1,4 +1,3 @@
-
 package requests
 
 import (
@@ -6,26 +5,33 @@ import (
 	"github.com/goravel/framework/contracts/validation"
 )
 
-type ShopRequest struct {
+type TableRequest struct {
+	Name string `form:"name" json:"name"`
+	Sql  string `form:"sql" json:"sql"`
 }
 
-func (r *ShopRequest) Authorize(ctx http.Context) error {
+func (r *TableRequest) Authorize(ctx http.Context) error {
 	return nil
 }
 
-func (r *ShopRequest) Rules(ctx http.Context) map[string]string {
+func (r *TableRequest) Rules(ctx http.Context) map[string]string {
+	return map[string]string{
+		"name": "required",
+		"sql":  "required",
+	}
+}
+
+func (r *TableRequest) Messages(ctx http.Context) map[string]string {
+	return map[string]string{
+		"name.required": "表名不能为空",
+		"sql.required":  "sql语句不能为空",
+	}
+}
+
+func (r *TableRequest) Attributes(ctx http.Context) map[string]string {
 	return map[string]string{}
 }
 
-func (r *ShopRequest) Messages(ctx http.Context) map[string]string {
-	return map[string]string{}
-}
-
-func (r *ShopRequest) Attributes(ctx http.Context) map[string]string {
-	return map[string]string{}
-}
-
-func (r *ShopRequest) PrepareForValidation(ctx http.Context, data validation.Data) error {
+func (r *TableRequest) PrepareForValidation(ctx http.Context, data validation.Data) error {
 	return nil
 }
-

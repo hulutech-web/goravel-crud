@@ -1,4 +1,4 @@
-package orm
+package curd_orm
 
 import (
 	"fmt"
