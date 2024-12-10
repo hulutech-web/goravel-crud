@@ -1,0 +1,57 @@
+// 定义主色背景变量
+@import 'vxe-table/lib/style.css';
+:root {
+// 背景
+    --main-bg-color:#0D0D0D;
+    --main-bg-color-light:#1ACE97;
+// 按钮渐变色
+    --gradient-color1: #62DAE1;
+    --gradient-color2: #6AE4CC;
+    --gradient-color3: #7AEDB5;
+    --gradient-color4: #8BF8A4;
+
+    // 新能源主题色
+    --primary-bg-color1: #BFD834;
+    --primary-bg-color2: #72CC50;
+    --primary-bg-color3: #019875;
+    --primary-bg-color4: #00AEAD;
+
+    // 装饰色
+    --decoration-txt-color1:#F6BD60;
+    --decoration-txt-color2:#F7EDE2;
+    --decoration-txt-color3:#F5CAC3;
+    --decoration-txt-color4:#84A59D;
+    --decoration-txt-color5:#F28482;
+    
+    // 辅助色
+    --secondary-bg-color1: #F2F2F2;
+    --secondary-bg-color2: #E6E6E6;
+    --secondary-bg-color3: #D9D9D9;
+    --secondary-bg-color4: #CCCCCC;
+    --secondary-bg-color5: #BFBFBF;
+    --secondary-bg-color6: #A6A6A6;
+
+    // 文字颜色
+    --primary-txt-color1:#000000;
+    --primary-txt-color1:#333333;
+    --primary-txt-color2:#9AAAAE;
+    // 边框
+    --border-color1: #E6E6E6;
+    --border-color2: #D9D9D9;
+    // 卡片
+    --card-bg-color1: #3D4D4A;
+    --card-bg-color2: #CEF3ED;
+
+    // 定义赤橙黄绿青蓝紫
+    --main-red: #FD6067;
+    --main-orange: #FDC169;
+    --main-yellow: #FFFF00;
+    --main-green: #4CD07D;
+    --main-cyan: #0CC4D7;
+    --main-blue: #229AF9;
+    --main-purple: #955CFE;
+    --main-pink: #FFC0CB;
+    --white: #FFFFFF;
+    --black: #000000;
+  }
+

@@ -1,0 +1,8 @@
+html.my-theme {
+    --vxe-font-color: rgba(0, 0, 0, 0.88);
+  --vxe-primary-color:#1677ff !important;
+  --vxe-border-radius:6px;
+  }
+  html.my-theme .vxe-button{
+    padding:4px 15px;
+  }
