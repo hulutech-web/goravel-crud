@@ -1,9 +1,13 @@
 # goravel-crud懒人扩展包
 ### goravel gopher 实用的懒人API生成工具，告别996
 #### 懒人面板
+- 建表方式
 <p align="center">
   <img src="https://github.com/hulutech-web/goravel-crud/blob/master/images/preview.png?raw=true" width="750" />
 </p>
+
+- 生成数据表方式
+  支持采用gorm的AutoMigrate()方法创建数据库表
 
 #### 安装:clone该扩展包,放入packages/目录下
 ``git clone git@github.com:hulutech-web/goravel-crud.git``
