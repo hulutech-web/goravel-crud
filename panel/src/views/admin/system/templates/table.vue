@@ -22,7 +22,7 @@
                   : { required: false },
               ]"
             >
-              <a-input v-model:value="column.column" placeholder="列名"/>
+              <a-input style="width:100px;" v-model:value="column.column" placeholder="列名"/>
             </a-form-item>
 
             <a-form-item
@@ -34,12 +34,12 @@
                   : { required: false },
               ]"
             >
-              <a-select style="width:200px;" v-model:value="column.type_name" :options="fieldOption"
+              <a-select style="width:100px;" v-model:value="column.type_name" :options="fieldOption"
                         placeholder="字段类型"></a-select>
             </a-form-item>
 
             <a-form-item
-                label="是否唯一"
+                label="唯一"
                 :name="['unique']"
                 :rules="[
                 ruleStore.getRule('unique')
@@ -54,7 +54,7 @@
             </a-form-item>
 
             <a-form-item
-                label="允许为空"
+                label="为空"
                 :name="['not_null']"
                 :rules="[
                 ruleStore.getRule('not_null')
@@ -69,7 +69,7 @@
             </a-form-item>
 
             <a-form-item
-                label="是否主键"
+                label="主键"
                 :name="['primary']"
                 :rules="[
                 ruleStore.getRule('primary')
