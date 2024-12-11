@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/goravel/framework/contracts/http"
+	"github.com/goravel/framework/facades"
 	httpfacade "github.com/hulutech-web/http_result"
 	"goravel/packages/goravel-crud/core/controller"
 	"goravel/packages/goravel-crud/core/curd_orm"
@@ -111,8 +113,18 @@ func (r *CRUDController) Tables(ctx http.Context) http.Response {
 	return httpfacade.NewResult(ctx).Success("", tbs)
 }
 
+func (r *CRUDController) TableColumn(ctx http.Context) http.Response {
+	tbname := ctx.Request().Input("table_name")
+	tbs := curd_orm.TableSchema(tbname)
+	return httpfacade.NewResult(ctx).Success("", tbs)
+}
+
 func (r *CRUDController) Migrate(ctx http.Context) http.Response {
 	sql := ctx.Request().Input("sql")
+	tablename := ctx.Request().Input("tablename")
+	//删除该表
+	delTableSql := fmt.Sprintf("drop table %s", tablename)
+	facades.Orm().Query().Exec(delTableSql)
 	err := curd_orm.GenSql(sql)
 	if err != nil {
 		return httpfacade.NewResult(ctx).Error(http.StatusInternalServerError, err.Error(), nil)

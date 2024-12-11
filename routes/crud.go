@@ -39,6 +39,7 @@ func CRUD(app foundation.Application) {
 
 		//	 panel面板
 		r.Get("tables", ctrl.Tables)
+		r.Post("table_column", ctrl.TableColumn)
 		r.Post("migrate", ctrl.Migrate)
 	})
 

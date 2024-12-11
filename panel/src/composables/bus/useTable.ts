@@ -12,18 +12,29 @@ export default () => {
       method:"GET"
     })
   }
+
+  const getColumn= async(table_name)=>{
+    return await request({
+      url: `crud/table_column`,
+      method:"POST",
+      data:{
+        table_name:table_name
+      }
+    })
+  }
   // 表单配置
   const serveApiUrl = import.meta.env.VITE_API_URL;
 
-  const execMigrate= async(sql:string)=>{
+  const execMigrate= async(tablename:string,sql:string)=>{
     return await request({
       url: `crud/migrate`,
       method:"post",
-      data:{sql:sql}
+      data:{sql:sql,tablename:tablename}
     })
   }
   return {
     getTable,
-    execMigrate
+    execMigrate,
+    getColumn
   };
 };

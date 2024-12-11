@@ -43,6 +43,9 @@ getData()
 const manage=(row)=>{
   router.push(`/admin/system/${row.table_name}/column`)
 }
+const show=(row)=>{
+  router.push(`/admin/system/${row.table_name}/show`)
+}
 </script>
 
 <style scoped>

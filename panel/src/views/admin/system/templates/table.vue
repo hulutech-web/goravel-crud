@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-row :gutter="[32,8]">
+    <a-row :gutter="[32,4]">
       <a-col :span="12">
         字段设计
         <a-form
@@ -22,7 +22,7 @@
                   : { required: false },
               ]"
             >
-              <a-input style="width:100px;" v-model:value="column.column" placeholder="列名"/>
+              <a-input style="width:120px;" v-model:value="column.column" placeholder="列名"/>
             </a-form-item>
 
             <a-form-item
@@ -34,7 +34,7 @@
                   : { required: false },
               ]"
             >
-              <a-select style="width:100px;" v-model:value="column.type_name" :options="fieldOption"
+              <a-select style="width:140px;" v-model:value="column.type_name" :options="fieldOption"
                         placeholder="字段类型"></a-select>
             </a-form-item>
 
@@ -47,7 +47,7 @@
                   : { required: false },
               ]"
             >
-              <a-radio-group v-model:value="column.unique" button-style="solid">
+              <a-radio-group size="small" v-model:value="column.unique" button-style="solid">
                 <a-radio-button value="1">是</a-radio-button>
                 <a-radio-button value="0">否</a-radio-button>
               </a-radio-group>
@@ -62,7 +62,7 @@
                   : { required: false },
               ]"
             >
-              <a-radio-group v-model:value="column.not_null" button-style="solid">
+              <a-radio-group size="small" v-model:value="column.not_null" button-style="solid">
                 <a-radio-button value="1">是</a-radio-button>
                 <a-radio-button value="0">否</a-radio-button>
               </a-radio-group>
@@ -77,7 +77,7 @@
                   : { required: false },
               ]"
             >
-              <a-radio-group v-model:value="column.primary_key" button-style="solid">
+              <a-radio-group size="small" v-model:value="column.primary_key" button-style="solid">
                 <a-radio-button :value="true">是</a-radio-button>
                 <a-radio-button :value="false">否</a-radio-button>
               </a-radio-group>
@@ -98,11 +98,34 @@
             </a-space>
           </a-form-item>
         </a-form>
-      </a-col>
-      <a-col :span="12">
         预览
         <Codemirror width="100%" v-model:value="previewSql" :options="cmOption" border ref="cmRef" height="400">
         </Codemirror>
+      </a-col>
+      <a-col :span="12">
+        <div>
+          <div style="margin-bottom: 10px;">
+            <strong>当前列</strong>
+          </div>
+          <vxe-table
+              border
+              size="small"
+              :data="columnData">
+            <vxe-column field="column_name" title="列名称" width="150" :tooltip="true" header-popover="列的名称"></vxe-column>
+            <vxe-column field="data_type" title="数据类型" width="150" :tooltip="true" header-popover="列的数据类型"></vxe-column>
+            <vxe-column field="column_type" title="完整类型定义" width="200" :tooltip="true" header-popover="列的完整类型定义"></vxe-column>
+            <vxe-column field="ordinal_position" title="列位置" width="80" :tooltip="true" header-popover="列在表中的位置（从1开始）"></vxe-column>
+            <vxe-column field="column_default" title="默认值" width="150" :tooltip="true" header-popover="列的默认值"></vxe-column>
+            <vxe-column field="column_comment" title="列注释" width="200" :tooltip="true" header-popover="对列的描述或备注信息"></vxe-column>
+            <vxe-column field="column_key" title="索引标志" width="100" :tooltip="true" header-popover="列是否是主键、唯一索引或非唯一索引 (PRI 主键, UNI 唯一索引, MUL 非唯一)"></vxe-column>
+            <vxe-column field="is_nullable" title="允许NULL" width="100" :tooltip="true" header-popover="列是否允许NULL值（YES 或 NO）"></vxe-column>
+            <vxe-column field="character_maximum_length" title="最大长度" width="150" :tooltip="true" header-popover="字符数据类型的字符最大长度"></vxe-column>
+            <vxe-column field="character_octet_length" title="最大长度" width="150" :tooltip="true" header-popover="字符数据类型的字节最大长度"></vxe-column>
+            <vxe-column field="numeric_precision" title="数值精度" width="100" :tooltip="true" header-popover="数值数据类型的精度"></vxe-column>
+            <vxe-column field="character_set_name" title="字符集名称" width="150" :tooltip="true" header-popover="列使用的字符集名称"></vxe-column>
+            <vxe-column field="extra" title="额外信息" width="150" :tooltip="true" header-popover="额外信息 (例如 auto_increment)"></vxe-column>
+          </vxe-table>
+        </div>
       </a-col>
     </a-row>
   </div>
@@ -172,13 +195,24 @@ const onPreview = () => {
 }
 
 const onSubmit = async values => {
-  await execMigrate(previewSql.value)
+  await execMigrate(props.tablename,previewSql.value)
 };
 
 const resetSubmit=()=>{
   dynamicValidateForm.columns=[]
   previewSql.value=""
 }
+
+// 列信息
+const {getColumn} = useTable();
+
+const columnData  = ref([])
+
+const init = async ()=>{
+  columnData.value=   await getColumn(props.tablename)
+}
+init();
+
 </script>
 
 <style scoped>

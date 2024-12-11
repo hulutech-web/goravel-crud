@@ -29,6 +29,29 @@ type TableInfo struct {
 	TableComment   string `gorm:"column:TABLE_COMMENT" json:"table_comment" form:"tableComment" comment:"表注释"`
 }
 
+type ColumnInfo struct {
+	TableCatalog           string `json:"table_catalog,omitempty" form:"table_catalog,omitempty" gorm:"column:TABLE_CATALOG"`
+	TableSchema            string `json:"table_schema,omitempty" form:"table_schema,omitempty" gorm:"column:TABLE_SCHEMA"`
+	TableName              string `json:"table_name,omitempty" form:"table_name,omitempty" gorm:"column:TABLE_NAME"`
+	ColumnName             string `json:"column_name,omitempty" form:"column_name,omitempty" gorm:"column:COLUMN_NAME"`
+	OrdinalPosition        uint64 `json:"ordinal_position,omitempty" form:"ordinal_position,omitempty" gorm:"column:ORDINAL_POSITION"`
+	ColumnDefault          string `json:"column_default,omitempty" form:"column_default,omitempty" gorm:"column:COLUMN_DEFAULT"`
+	IsNullable             string `json:"is_nullable,omitempty" form:"is_nullable,omitempty" gorm:"column:IS_NULLABLE"`
+	DataType               string `json:"data_type,omitempty" form:"data_type,omitempty" gorm:"column:DATA_TYPE"`
+	CharacterMaximumLength string `json:"character_maximum_length,omitempty" form:"character_maximum_length,omitempty" gorm:"column:CHARACTER_MAXIMUM_LENGTH"`
+	CharacterOctetLength   string `json:"character_octet_length,omitempty" form:"character_octet_length,omitempty" gorm:"column:CHARACTER_OCTET_LENGTH"`
+	NumericPrecision       string `json:"numeric_precision,omitempty" form:"numeric_precision,omitempty" gorm:"column:NUMERIC_PRECISION"`
+	NumericScale           string `json:"numeric_scale,omitempty" form:"numeric_scale,omitempty" gorm:"column:NUMERIC_SCALE"`
+	DateTimePrecision      string `json:"datetime_precision,omitempty" form:"datetime_precision,omitempty" gorm:"column:Datetime_precision"`
+	CharacterSet           string `json:"character_set_name,omitempty" form:"character_set_name,omitempty" gorm:"column:CHARACTER_SET_NAME"`
+	CollationName          string `json:"collation_name,omitempty" form:"collation_name,omitempty" gorm:"column:COLLATION_NAME"`
+	ColumnType             string `json:"column_type,omitempty" form:"column_type,omitempty" gorm:"column:COLUMN_TYPE"`
+	ColumnKey              string `json:"column_key,omitempty" form:"column_key,omitempty" gorm:"column:COLUMN_KEY"`
+	Extra                  string `json:"extra,omitempty" form:"extra,omitempty" gorm:"column:EXTRA"`
+	Privileges             string `json:"privileges,omitempty" form:"privileges,omitempty" gorm:"column:PRIVILEGES"`
+	ColumnComment          string `json:"column_comment,omitempty" form:"column_comment,omitempty" gorm:"column:COLUMN_COMMENT"`
+}
+
 func TableDefine() []TableInfo {
 	var tableInfos []TableInfo
 	db_name := facades.Config().Env("DB_DATABASE")
@@ -38,4 +61,15 @@ WHERE table_schema = '%s';`, db_name)
 
 	facades.Orm().Query().Raw(querySql).Scan(&tableInfos)
 	return tableInfos
+}
+
+func TableSchema(tablename string) []ColumnInfo {
+	var columnInfos []ColumnInfo
+	db_name := facades.Config().Env("DB_DATABASE")
+	querySql := fmt.Sprintf(`SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_NAME = '%s'
+AND TABLE_SCHEMA = '%s';`, tablename, db_name)
+
+	facades.Orm().Query().Raw(querySql).Scan(&columnInfos)
+	return columnInfos
 }
