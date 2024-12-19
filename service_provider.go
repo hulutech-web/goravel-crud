@@ -22,8 +22,8 @@ func (receiver *ServiceProvider) Register(app foundation.Application) {
 
 func (receiver *ServiceProvider) Boot(app foundation.Application) {
 	routes.CRUD(app)
-	app.Publishes("./packages/crud", map[string]string{
-		"panel.html": app.BasePath("resources/views/panel.html"),
-		"assets":     app.PublicPath("panel/assets"),
+	app.Publishes("./packages/goravel-crud", map[string]string{
+		"panel/dist":            app.PublicPath("dist"),
+		"panel/dist/index.html": app.BasePath("resources/views/index.html"),
 	})
 }

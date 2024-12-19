@@ -33,7 +33,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
   const isBuild = command === "build";
   console.log(VITE_BASE_URL, VITE_DROP_CONSOLE, VITE_BASE_API_URL);
   return {
-    base: "/",
+    base: "/dist",
     define: {
       __APP_INFO__: JSON.stringify(__APP_INFO__),
     },

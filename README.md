@@ -29,6 +29,14 @@ func init() {
 }
 
 ```
+#### 发布资源
+```bash
+go run . artisan vendor:publish --package=./packages/goravel-crud -f
+```
+
+#### 访问面板
+http://localhost:3000/panel  
+
 #### 常用功能，一键生成
 - 模型
 - 控制器
