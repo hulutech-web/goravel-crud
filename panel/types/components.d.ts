@@ -54,6 +54,7 @@ declare module 'vue' {
     Hlgfullcalendarcancel: typeof import('./../src/components/hlgfullcalendarcancel/index.vue')['default']
     Hlpfullcalendar: typeof import('./../src/components/hlpfullcalendar/index.vue')['default']
     Hlpfullcalendarcancel: typeof import('./../src/components/hlpfullcalendarcancel/index.vue')['default']
+    HuluRules: typeof import('./../src/components/hulu-rules/index.vue')['default']
     IconCommunity: typeof import('./../src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./../src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./../src/components/icons/IconEcosystem.vue')['default']

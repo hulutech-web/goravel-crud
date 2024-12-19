@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"github.com/goravel/framework/facades"
 	"github.com/goravel/framework/support/path"
+	"goravel/packages/goravel-crud/validator"
 	"log"
 	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"strings"
 )
 
 // 覆盖原来的模型定义
@@ -85,4 +87,114 @@ func findFilesAndExtractKeyword(rootDir, pattern string) (files []string, keywor
 	}
 
 	return files, keywords
+}
+
+func GenModelFile(fields []validator.Field, modelName string, filePath string) error {
+	//modelName的末尾有s，则去掉s
+	if strings.HasSuffix(modelName, "s") {
+		modelName = strings.TrimSuffix(modelName, "s")
+	}
+
+	newModelName := capitalizeFieldName(modelName)
+	modelCode, err := genModelCode(fields, newModelName)
+	if err != nil {
+		return err
+	}
+	full_name := path.App("models/" + newModelName + ".go")
+	// Write the generated model code to the specified file path.
+	err = os.WriteFile(full_name, []byte(modelCode), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write file: %w", err)
+	}
+
+	return nil
+}
+
+func genModelCode(fields []validator.Field, modelName string) (string, error) {
+	var sb strings.Builder
+
+	sb.WriteString(fmt.Sprintf(`package models
+
+import (
+	"github.com/goravel/framework/database/orm"
+	"goravel/packages/goravel-crud/core/curd_orm"
+)
+
+type %s struct {
+	orm.Model
+`, modelName))
+
+	for _, field := range fields {
+		fieldStr := genField(field)
+		sb.WriteString(fieldStr)
+	}
+
+	sb.WriteString(`
+	orm.SoftDeletes
+}
+
+func init() {
+	curd_orm.RegisterModel(&` + modelName + `{})
+}
+`)
+
+	return sb.String(), nil
+}
+
+func genField(f validator.Field) string {
+	tagString := fmt.Sprintf(`gorm:"column:%s" form:"%s" json:"%s"`, f.Column, f.Column, f.Column)
+
+	return fmt.Sprintf("	%s %s `%s`\n", capitalizeFieldName(f.Column), capitalizeTypeName(f.TypeName), tagString)
+}
+
+func capitalizeFieldName(name string) string {
+	if name == "" {
+		return ""
+	}
+	return strings.Title(name)
+}
+
+func capitalizeTypeName(typeName string) string {
+	typeMapping := map[string]string{
+		"VARCHAR(255)": "string",
+		"INT":          "int",
+		"INTEGER":      "int",
+		"FLOAT":        "float64",
+		"DATETIME":     "time.Time",
+		"TEXT":         "string",
+		"TINYINT":      "int",
+		"SMALLINT":     "int",
+		"MEDIUMINT":    "int",
+		"BIGINT":       "int",
+		"DOUBLE":       "float64",
+		"DECIMAL":      "big.Rat", // or float64 if precision is not a concern
+		"DATE":         "time.Time",
+		"TIME":         "time.Time",
+		"TIMESTAMP":    "time.Time",
+		"YEAR":         "int16",
+		"CHAR":         "string",
+		"BINARY":       "[]byte",
+		"VARBINARY":    "[]byte",
+		"TINYBLOB":     "[]byte",
+		"BLOB":         "[]byte",
+		"MEDIUMBLOB":   "[]byte",
+		"LONGBLOB":     "[]byte",
+		"TINYTEXT":     "string",
+		"MEDIUMTEXT":   "string",
+		"LONGTEXT":     "string",
+		"ENUM":         "string",
+		"SET":          "string",
+		"BIT":          "uint64", // or []byte for bit strings
+		"JSON":         "json.RawMessage",
+		"POINT":        "geom.Point",
+		"LINESTRING":   "geom.LineString",
+		"POLYGON":      "geom.Polygon",
+		"GEOMETRY":     "geom.Geometry",
+		"GEOGRAPHY":    "geom.Geography",
+	}
+
+	if goType, exists := typeMapping[strings.ToUpper(typeName)]; exists {
+		return goType
+	}
+	return "interface{}"
 }

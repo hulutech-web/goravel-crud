@@ -35,7 +35,7 @@ func CRUD(app foundation.Application) {
 		// 请求
 		r.Post("request_make", ctrl.Request)
 
-		r.Post("entity_all", ctrl.All)
+		//r.Post("entity_all", ctrl.All)
 
 		//	 panel面板
 		r.Get("tables", ctrl.Tables)

@@ -25,16 +25,42 @@ export default () => {
   // 表单配置
   const serveApiUrl = import.meta.env.VITE_API_URL;
 
-  const execMigrate= async(tablename:string,sql:string)=>{
+  const execMigrate= async(tablename:string,sql:string,fields)=>{
     return await request({
       url: `crud/migrate`,
       method:"post",
-      data:{sql:sql,tablename:tablename}
+      data:{sql:sql,tablename:tablename,fields:fields}
+    })
+  }
+
+  const makeRequest =async(data)=>{
+    return await request({
+      url:"crud/request_make",
+      method:"post",
+      data:data
+    })
+  }
+  const makeRouter =async(data)=>{
+    return await request({
+      url:"crud/router_make",
+      method:"post",
+      data:data
+    })
+  }
+
+  const makeController =async(data)=>{
+    return await request({
+      url:"crud/controller_make",
+      method:"post",
+      data:data
     })
   }
   return {
     getTable,
     execMigrate,
-    getColumn
+    getColumn,
+    makeRequest,
+    makeRouter,
+    makeController
   };
 };

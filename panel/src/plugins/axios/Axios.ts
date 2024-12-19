@@ -53,19 +53,18 @@ service.interceptors.response.use(
     (response: AxiosResponse<BaseResponse>) => {
       const res = response.data;
       // if the custom code is not 200, it is judged as an error.
-      if (response.status !== 500) {
-        if (res.message==""){
-          return response;
-        }else{
-          $message.error(res.message || UNKNOWN_ERROR);
-        }
-        return Promise.reject(res.data.message);
-      } else {
-        if (res.data.message) {
-          $message.success(res.data.message);
+      if (response.status==200){
+        if(response.data.message){
+          $message.success(response.data.message);
         }
         return response;
+      }else{
+        if (res.message) {
+          $message.error(res.message);
+        }
+        return Promise.reject(res.data.message);
       }
+
     },
     (error) => {
       let errMsg = UNKNOWN_ERROR;

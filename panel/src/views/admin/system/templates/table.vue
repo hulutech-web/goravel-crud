@@ -105,7 +105,7 @@
       <a-col :span="12">
         <div>
           <div style="margin-bottom: 10px;">
-            <strong>当前列</strong>
+            <a-button type="primary" @click="fresh">刷新</a-button>
           </div>
           <vxe-table
               border
@@ -195,7 +195,7 @@ const onPreview = () => {
 }
 
 const onSubmit = async values => {
-  await execMigrate(props.tablename,previewSql.value)
+  await execMigrate(props.tablename,previewSql.value,dynamicValidateForm.columns)
 };
 
 const resetSubmit=()=>{
@@ -208,6 +208,9 @@ const {getColumn} = useTable();
 
 const columnData  = ref([])
 
+const fresh=()=>{
+  init()
+}
 const init = async ()=>{
   columnData.value=   await getColumn(props.tablename)
 }

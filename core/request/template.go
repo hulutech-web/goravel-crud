@@ -3,12 +3,14 @@ package request
 import (
 	"fmt"
 	"github.com/goravel/framework/support/path"
+	"goravel/packages/goravel-crud/validator"
 	"os"
 	"strings"
+	"text/template"
+	"unicode"
 )
 
-var (
-	tmpRequestStr = `
+var tmpRequestStr = `
 package requests
 
 import (
@@ -16,50 +18,91 @@ import (
 	"github.com/goravel/framework/contracts/validation"
 )
 
-type UserRequest struct {
+type {{.ModelName}}Request struct {
+{{range .Fields}}
+	{{TitleCaseFirst .ColumnName}} string ` + "`json:\"{{.ColumnName}}\" form:\"{{.ColumnName}}\"`" + `
+{{end}}
 }
 
-func (r *UserRequest) Authorize(ctx http.Context) error {
+func (r *{{.ModelName}}Request) Authorize(ctx http.Context) error {
 	return nil
 }
 
-func (r *UserRequest) Rules(ctx http.Context) map[string]string {
+func (r *{{.ModelName}}Request) Rules(ctx http.Context) map[string]string {
+	return map[string]string{
+{{range .Fields}}
+		"{{.ColumnName}}": "{{.RuleName}}{{if .RuleValue}}:{{.RuleValue}}{{end}}",
+{{end}}
+	}
+}
+
+func (r *{{.ModelName}}Request) Messages(ctx http.Context) map[string]string {
 	return map[string]string{}
 }
 
-func (r *UserRequest) Messages(ctx http.Context) map[string]string {
+func (r *{{.ModelName}}Request) Attributes(ctx http.Context) map[string]string {
 	return map[string]string{}
 }
 
-func (r *UserRequest) Attributes(ctx http.Context) map[string]string {
-	return map[string]string{}
-}
-
-func (r *UserRequest) PrepareForValidation(ctx http.Context, data validation.Data) error {
+func (r *{{.ModelName}}Request) PrepareForValidation(ctx http.Context, data validation.Data) error {
 	return nil
 }
-
 `
-)
 
-func GenTemplate(modelName string) string {
-	// 使用 strings.ReplaceAll 来替换所有的 "User" 关键词为新的模型名称
-	// 创建一个映射，用于指定需要替换的字符串和它们对应的替换值
-	replacements := map[string]string{
-		"User":  modelName,
-		"Users": modelName + "s",
-		"user":  strings.ToLower(modelName[:1]) + modelName[1:],
+// TitleCaseFirst 将给定字符串的第一个字母转换为大写。
+func TitleCaseFirst(s string) string {
+	if s == "" {
+		return ""
+	}
+	runes := []rune(s)
+	return string([]rune{unicode.ToUpper(runes[0])}) + string(runes[1:])
+}
+func GenTemplate(modelName string, fields []validator.RuleField) string {
+	type TemplateData struct {
+		ModelName string
+		Fields    []struct {
+			ColumnName string
+			RuleName   string
+			RuleValue  string
+		}
 	}
 
-	// 对每个键值对进行替换
-	for old, newVal := range replacements {
-		tmpRequestStr = strings.ReplaceAll(tmpRequestStr, old, newVal)
+	data := TemplateData{
+		ModelName: modelName,
+		Fields:    make([]struct{ ColumnName, RuleName, RuleValue string }, len(fields)),
 	}
 
-	return tmpRequestStr
+	for i, field := range fields {
+		data.Fields[i] = struct {
+			ColumnName string
+			RuleName   string
+			RuleValue  string
+		}{
+			ColumnName: field.ColumnName,
+			RuleName:   field.RuleName,
+			RuleValue:  field.RuleValue,
+		}
+	}
+
+	tmpl, err := template.New("requestTemplate").Funcs(template.FuncMap{
+		"TitleCaseFirst": TitleCaseFirst,
+	}).Parse(tmpRequestStr)
+	if err != nil {
+		fmt.Println("Error parsing template:", err)
+		return ""
+	}
+
+	var result strings.Builder
+	err = tmpl.Execute(&result, data)
+	if err != nil {
+		fmt.Println("Error executing template:", err)
+		return ""
+	}
+
+	return result.String()
 }
 
-func CopyToRequestPath(modelName string, template string) error {
+func CopyAndFillRuleToRequestPath(modelName string, template string) error {
 	requestPath := path.App("http/requests")
 	//查看有没有这个目录，如果没有就创建这个目录
 	if err := os.MkdirAll(requestPath, os.ModePerm); err != nil {

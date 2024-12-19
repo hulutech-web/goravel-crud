@@ -1,7 +1,9 @@
 package request
 
-func Gen(modelName string) error {
-	template := GenTemplate(modelName)
-	err := CopyToRequestPath(modelName, template)
+import "goravel/packages/goravel-crud/validator"
+
+func Gen(modelName string, fields []validator.RuleField) error {
+	template := GenTemplate(modelName, fields)
+	err := CopyAndFillRuleToRequestPath(modelName, template)
 	return err
 }
