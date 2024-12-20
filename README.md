@@ -1,3 +1,7 @@
+
+<p align="center">
+  <img src="https://github.com/hulutech-web/goravel-crud/blob/master/images/logo.png?raw=true" width="300" />
+</p>
 # goravel-crud懒人扩展包
 ### goravel gopher 实用的懒人API生成工具，告别996
 #### 懒人面板
