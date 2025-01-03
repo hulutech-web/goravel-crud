@@ -81,7 +81,7 @@ facades.Route().Prefix("/api").Group(func(router route.Router) {
 ```go
 router.Prefix("/crud").Group(func(r route.Router) {
 		ctrl := controller.NewCRUDController()
-		// 1-生成迁移文件
+		// 1-生成迁移文件（适配goravelv1.15后废除）
 		r.Post("migration_make", ctrl.Migration)
 
 		//	2-生成模型
