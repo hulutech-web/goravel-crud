@@ -32,10 +32,6 @@ const mkControl = async () => {
           :current="step"
           :items="[
       {
-        title: '字段设计',
-        subTitle:'操作结构体字段与数据sql',
-      },
-      {
         title: '表单验证xxxRequest',
         subTitle:'字段验证',
       },
@@ -49,16 +45,14 @@ const mkControl = async () => {
       },
     ]"
       ></a-steps>
+
       <div v-if="step==0" style="margin-top:12px">
-        <Table :tablename="table_name"/>
-      </div>
-      <div v-if="step==1" style="margin-top:12px">
         <ValidateForm :tablename="table_name"/>
       </div>
-      <div v-if="step==2" style="margin-top:12px">
+      <div v-if="step==1" style="margin-top:12px">
         <a-button type="primary" @click="mkControl">生成控制器</a-button>
       </div>
-      <div v-if="step==3" style="margin-top:12px">
+      <div v-if="step==2" style="margin-top:12px">
         <a-button type="primary" @click="mkRouter">生成路由</a-button>
       </div>
     </a-card>
