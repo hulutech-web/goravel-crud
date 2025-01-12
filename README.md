@@ -2,7 +2,7 @@
 ### goravel gopher 实用的懒人API生成工具，告别996，效率提升10倍
 #### 懒人面板
 <p align="center">
-  <img src="https://github.com/hulutech-web/goravel-crud/blob/master/images/preview.png?raw=true" width="750" />
+  <img src="https://github.com/hulutech-web/goravel-crud/blob/master/images/preview.jpg?raw=true" width="300" />
 </p>
 
 #### 安装:clone该扩展包,放入packages/目录下
