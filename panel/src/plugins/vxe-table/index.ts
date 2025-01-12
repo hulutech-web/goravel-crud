@@ -1,5 +1,7 @@
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
+import VxeUI from 'vxe-pc-ui'
+import 'vxe-pc-ui/lib/style.css'
 import './mytheme.css'
 import XEUtils from 'xe-utils'
 import zhCN from 'vxe-table/es/locale/lang/zh-CN'
@@ -66,5 +68,6 @@ VXETable.renderer.add("myClipboard", {
 })
 const setup = (app: App) => {
     app.use(VXETable)
+    app.use(VxeUI)
 }
 export {setup}

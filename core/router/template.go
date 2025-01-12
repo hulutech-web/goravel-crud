@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -72,8 +71,8 @@ func EnsureImport(filePath, importPath string) error {
 }
 
 func CopyToRoutePath(modelName string, template string) error {
-	routePath := path.Base("routes")
-	file_name := "api.go"
+	routePath := path.Base("packages/goravel-crud/routes")
+	file_name := "crud_api.go"
 	file_path := fmt.Sprintf("%s/%s", routePath, file_name)
 
 	// 将文件内容转换为字符串并按行分割
@@ -91,25 +90,24 @@ func CopyToRoutePath(modelName string, template string) error {
 
 	//初始化路由结构，
 	// 原始代码
-	code := string(routeByte)
-
+	//code := string(routeByte)
 	// 正则表达式模式
-	pattern := `facades\.Route\(\)\.Prefix\("/api"\)\.Group\(func\(router route\.Router\) \{`
-	re := regexp.MustCompile(pattern)
-
-	// 查找匹配项
-	if re.FindString(code) == "" {
-		// 如果没有匹配项，则添加
-		code = fmt.Sprintf("%s\nfacades.Route().Prefix(\"/api\").Group(func(router route.Router) {\n})\n", code)
-	}
-	orginRouteStr := `facades\.Route\(\)\.Prefix\("/api"\)\.Group\(func\(router route\.Router\) \{
-}`
-	ioutil.WriteFile(file_path, []byte(orginRouteStr), 0777)
+	//	pattern := `facades.Route().Middleware(jwt_middleware_cbk()).Prefix("/business").Group(func(router route.Router) {`
+	//	re := regexp.MustCompile(pattern)
+	//
+	//	// 查找匹配项
+	//	if re.FindString(code) == "" {
+	//		// 如果没有匹配项，则添加
+	//		code = fmt.Sprintf("%s\nfacades.Route().Middleware(jwt()).Prefix(\"/api\").Group(func(router route.Router) {\n})\n", code)
+	//	}
+	//	orginRouteStr := `facades\.Route\(\)\.Prefix\("/api"\)\.Group\(func\(router route\.Router\) \{
+	//}`
+	//	ioutil.WriteFile(file_path, []byte(orginRouteStr), 0777)
 	newCode := GenTemplate(modelName)
 	// 查找 func Api() { } 的结束位置
 	var insertIndex int
 	for i, line := range lines {
-		if strings.Contains(line, "facades.Route().Prefix(\"/api\").Group(func(router route.Router) {") {
+		if strings.Contains(line, "facades.Route().Middleware(jwt_middleware_cbk()).Prefix(prefix).Group(func(router route.Router) {") {
 			// 找到函数定义后继续遍历直到找到对应的闭括号
 			for j := i + 1; j < len(lines); j++ {
 				if strings.TrimSpace(lines[j]) == "})" {
@@ -125,7 +123,7 @@ func CopyToRoutePath(modelName string, template string) error {
 	if insertIndex > 0 {
 		lines = append(lines[:insertIndex+1], append([]string{newCode}, lines[insertIndex+1:]...)...)
 	} else {
-		log.Fatalf("facades.Route().Prefix(\"/api\").Group(func(router route.Router) {} 没有找到")
+		log.Fatalf("facades.Route().Middleware(jwt_middleware_cbk()).Prefix(prefix).Group(func(router route.Router) {没有找到")
 	}
 
 	// 将更新后的行重新组合成一个字符串

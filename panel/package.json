@@ -51,7 +51,8 @@
     "vue": "~3.5.11",
     "vue-router": "^4.3.0",
     "vue-types": "^5.1.3",
-    "vxe-table": "^4.5.21",
+    "vxe-pc-ui": "4.3.69",
+    "vxe-table": "4.10.5",
     "xe-utils": "^3.5.23"
   },
   "devDependencies": {
